@@ -1,14 +1,13 @@
 name: Auto Commit
 
-# Event yang akan memicu workflow berdasarkan jadwal (cron job)
 on:
   schedule:
-    - cron: "0 0 * * *"  # Cron job yang dijalankan setiap hari pada pukul 00:00 UTC
+    - cron: "0 7 * * *"  # Setiap hari pada pukul 00:00 UTC
 
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
-    
+
     steps:
       # Checkout repository ke dalam workflow
       - name: Checkout Repository
@@ -24,7 +23,6 @@ jobs:
       - name: Make Changes
         run: |
           echo "Auto update on $(date)" >> changes.txt
-          # Tambahkan script lain sesuai kebutuhan
 
       # Tambahkan dan commit perubahan
       - name: Commit Changes
@@ -34,7 +32,7 @@ jobs:
 
       # Dorong perubahan kembali ke branch asal
       - name: Push Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub otomatis menyediakan token ini
         run: |
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
