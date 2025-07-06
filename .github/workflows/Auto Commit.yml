@@ -2,37 +2,32 @@ name: Auto Commit
 
 on:
   schedule:
-    - cron: "0 7 * * *"  # Setiap hari pada pukul 00:00 UTC
+    - cron: "0 7 * * *"  # Tiap hari jam 07:00 UTC (14:00 WIB)
 
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository ke dalam workflow
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Setup Git untuk melakukan commit
       - name: Setup Git
         run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
+          git config --global user.name '${{ github.actor }}'
+          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
 
-      # Tambahkan langkah untuk melakukan perubahan otomatis
       - name: Make Changes
         run: |
           echo "Auto update on $(date)" >> changes.txt
 
-      # Tambahkan dan commit perubahan
       - name: Commit Changes
         run: |
           git add .
           git commit -m "Auto commit from GitHub Actions" || echo "No changes to commit"
 
-      # Dorong perubahan kembali ke branch asal
       - name: Push Changes
         run: |
-          git push
+          git push origin HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
